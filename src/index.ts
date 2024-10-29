@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import './database/config';
 import { fetchHTML } from './plugins/scrap';
 
 const app = express();
