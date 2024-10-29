@@ -1,5 +1,6 @@
 require('dotenv').config();
 import express, { Request, Response } from 'express';
+let bodyParser = require('body-parser')
 import './database/config';
 import { Website } from './database/models/website';
 import { fetchHTML, parseHTMLContent, getHostname } from './plugins/scrap';
@@ -7,8 +8,14 @@ import { fetchHTML, parseHTMLContent, getHostname } from './plugins/scrap';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.get('/', (req: Request, res: Response) => {
-  const url = 'https://www.grovixlab.com';
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded())
+
+// parse application/json
+app.use(bodyParser.json())
+
+app.get('/api/web/scrap', (req: Request, res: Response) => {
+  const { url } = req.body;
 
   fetchHTML(url)
     .then(async html => {
