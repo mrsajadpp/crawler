@@ -1,6 +1,6 @@
 import * as https from 'https';
 import * as http from 'http';
-
+ 
 export const fetchHTML = (url: string): Promise<string> => {
     return new Promise((resolve, reject) => {
         const client = url.startsWith('https') ? https : http;

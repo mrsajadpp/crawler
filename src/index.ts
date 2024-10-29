@@ -1,8 +1,9 @@
+require('dotenv').config();
 import express, { Request, Response } from 'express';
 import './database/config';
 import { fetchHTML } from './plugins/scrap';
 
-const app = express();
+const app = express(); 
 const PORT = process.env.PORT || 3001;
 
 app.get('/', (req: Request, res: Response) => {
