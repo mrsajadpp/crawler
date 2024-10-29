@@ -9,10 +9,10 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded())
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 app.get('/api/web/scrap', (req: Request, res: Response) => {
   const { url } = req.body;
