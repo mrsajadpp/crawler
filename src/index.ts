@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 
-app.get('/api/web/scrap', (req: Request, res: Response) => {
+app.post('/api/web/scrap', (req: Request, res: Response) => {
   const { url } = req.body;
 
   fetchHTML(url)
