@@ -1,15 +1,38 @@
 require('dotenv').config();
 import express, { Request, Response } from 'express';
 import './database/config';
-import { fetchHTML } from './plugins/scrap';
+import { Website } from './database/models/website';
+import { fetchHTML, parseHTMLContent, getHostname } from './plugins/scrap';
 
-const app = express(); 
+const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.get('/', (req: Request, res: Response) => {
-  // Usage example:
-  fetchHTML('https://www.google.com')
-    .then(html => {
+  const url = 'https://www.grovixlab.com';
+
+  fetchHTML(url)
+    .then(async html => {
+      const { title, description, keywords } = parseHTMLContent(html);
+      const hostname = getHostname(url);
+
+      const normalizedHostname = hostname.startsWith('www.') ? hostname.slice(4) : hostname;
+      const existingWebsite = await Website.findOne({
+        hostname: { $regex: new RegExp(`^${normalizedHostname}$`, 'i') } // Case insensitive match
+      });
+
+      if (existingWebsite) {
+        console.log('Website already exists in the database:', existingWebsite);
+        return res.status(400).send('Website data already exists.');
+      }
+
+      let web = new Website({
+        title,
+        description,
+        hostname: normalizedHostname,
+        keywords,
+        url
+      });
+      await web.save();
       res.send(html);
     })
     .catch(error => console.error('Error:', error.message));
